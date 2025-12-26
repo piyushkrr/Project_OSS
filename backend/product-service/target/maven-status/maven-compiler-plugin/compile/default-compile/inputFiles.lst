@@ -1,0 +1,9 @@
+/home/labuser/Downloads/Project_OSS/backend/product-service/src/main/java/com/oss/product/ProductServiceApplication.java
+/home/labuser/Downloads/Project_OSS/backend/product-service/src/main/java/com/oss/product/entity/Image.java
+/home/labuser/Downloads/Project_OSS/backend/product-service/src/main/java/com/oss/product/repository/ProductRepository.java
+/home/labuser/Downloads/Project_OSS/backend/product-service/src/main/java/com/oss/product/controller/ProductController.java
+/home/labuser/Downloads/Project_OSS/backend/product-service/src/main/java/com/oss/product/repository/ImageRepository.java
+/home/labuser/Downloads/Project_OSS/backend/product-service/src/main/java/com/oss/product/service/ProductService.java
+/home/labuser/Downloads/Project_OSS/backend/product-service/src/main/java/com/oss/product/config/ProductDataSeeder.java
+/home/labuser/Downloads/Project_OSS/backend/product-service/src/main/java/com/oss/product/entity/Product.java
+/home/labuser/Downloads/Project_OSS/backend/product-service/src/main/java/com/oss/product/dto/ProductDTO.java

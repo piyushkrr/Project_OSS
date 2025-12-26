@@ -1,0 +1,12 @@
+com/oss/product/entity/Image$ImageBuilder.class
+com/oss/product/config/ProductDataSeeder.class
+com/oss/product/repository/ImageRepository.class
+com/oss/product/dto/ProductDTO$ProductDTOBuilder.class
+com/oss/product/entity/Product.class
+com/oss/product/controller/ProductController.class
+com/oss/product/entity/Image.class
+com/oss/product/dto/ProductDTO.class
+com/oss/product/entity/Product$ProductBuilder.class
+com/oss/product/service/ProductService.class
+com/oss/product/ProductServiceApplication.class
+com/oss/product/repository/ProductRepository.class

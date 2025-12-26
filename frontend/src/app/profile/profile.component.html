@@ -1,0 +1,305 @@
+<div class="container mt-5">
+    <div class="row">
+        <!-- Sidebar Navigation -->
+        <div class="col-md-3 mb-4">
+            <div class="card shadow-sm border-0 rounded-4">
+                <div class="card-body p-0">
+                    <div class="list-group list-group-flush rounded-4">
+                        <button type="button" class="list-group-item list-group-item-action py-3 px-4 border-bottom-0"
+                            [class.active]="activeTab === 'info'" (click)="setActiveTab('info')">
+                            <i class="bi bi-person-circle me-3"></i>Personal Info
+                        </button>
+                        <button type="button" class="list-group-item list-group-item-action py-3 px-4 border-bottom-0"
+                            [class.active]="activeTab === 'orders'" (click)="setActiveTab('orders')">
+                            <i class="bi bi-box-seam me-3"></i>My Orders
+                        </button>
+                        <button type="button" class="list-group-item list-group-item-action py-3 px-4 border-bottom-0"
+                            [class.active]="activeTab === 'addresses'" (click)="setActiveTab('addresses')">
+                            <i class="bi bi-geo-alt me-3"></i>My Addresses
+                        </button>
+                        <button type="button" class="list-group-item list-group-item-action py-3 px-4 border-bottom-0"
+                            [class.active]="activeTab === 'payments'" (click)="setActiveTab('payments')">
+                            <i class="bi bi-credit-card me-3"></i>Saved Payments
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Main Content -->
+        <div class="col-md-9">
+
+            <!-- Global Messages -->
+            <div *ngIf="message" class="alert shadow-sm border-0 mb-4"
+                [ngClass]="isError ? 'alert-danger' : 'alert-success'" role="alert">
+                <i class="bi" [ngClass]="isError ? 'bi-exclamation-triangle-fill' : 'bi-check-circle-fill'"></i>
+                {{ message }}
+            </div>
+
+            <!-- Tab: Personal Info -->
+            <div *ngIf="activeTab === 'info'"
+                class="card shadow-sm border-0 rounded-4 animate__animated animate__fadeIn">
+                <div class="card-header bg-white py-3 d-flex justify-content-between align-items-center">
+                    <h5 class="mb-0 fw-bold">Personal Information</h5>
+                    <button class="btn btn-outline-primary btn-sm rounded-pill px-3" (click)="toggleEdit()"
+                        *ngIf="!editMode">
+                        <i class="bi bi-pencil me-1"></i> Edit
+                    </button>
+                </div>
+                <div class="card-body p-4">
+                    <form (ngSubmit)="saveProfile()">
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label fw-bold small">First Name</label>
+                                <input type="text" class="form-control" [(ngModel)]="user.firstName" name="firstName"
+                                    [disabled]="!editMode" required>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label fw-bold small">Last Name</label>
+                                <input type="text" class="form-control" [(ngModel)]="user.lastName" name="lastName"
+                                    [disabled]="!editMode" required>
+                            </div>
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label fw-bold small">Email Address</label>
+                            <input type="email" class="form-control" [(ngModel)]="user.email" name="email" disabled>
+                            <div class="form-text">Email address cannot be changed.</div>
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label fw-bold small">Phone Number</label>
+                            <input type="text" class="form-control" [(ngModel)]="user.phoneNumber" name="phoneNumber"
+                                [disabled]="!editMode">
+                        </div>
+
+                        <!-- Main Address Field (Legacy) -->
+                        <div class="mb-3">
+                            <label class="form-label fw-bold small">Primary Address</label>
+                            <textarea class="form-control" [(ngModel)]="user.address" name="address" rows="2"
+                                [disabled]="!editMode"></textarea>
+                        </div>
+
+                        <div class="mb-3" *ngIf="editMode">
+                            <label class="form-label fw-bold small">New Password (Optional)</label>
+                            <input type="password" class="form-control" [(ngModel)]="user.password" name="password"
+                                placeholder="Leave blank to keep current">
+                        </div>
+
+                        <div class="d-flex justify-content-end gap-2 mt-4" *ngIf="editMode">
+                            <button type="button" class="btn btn-light rounded-pill px-4"
+                                (click)="toggleEdit()">Cancel</button>
+                            <button type="submit" class="btn btn-primary rounded-pill px-4" [disabled]="processing">
+                                <span *ngIf="processing" class="spinner-border spinner-border-sm me-2"></span>
+                                Save Changes
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+            <!-- Tab: My Orders -->
+            <div *ngIf="activeTab === 'orders'" class="animate__animated animate__fadeIn">
+                <!-- <h4 class="mb-4 fw-bold">Order History</h4> -->
+                <app-order-history></app-order-history>
+            </div>
+
+            <!-- Tab: My Addresses -->
+            <div *ngIf="activeTab === 'addresses'" class="animate__animated animate__fadeIn">
+                <div class="d-flex justify-content-between align-items-center mb-4">
+                    <h4 class="mb-0 fw-bold">Saved Addresses</h4>
+                    <button class="btn btn-primary rounded-pill px-3" (click)="toggleAddressForm()"
+                        *ngIf="!showAddressForm">
+                        <i class="bi bi-plus-lg me-1"></i> Add New Address
+                    </button>
+                </div>
+
+                <!-- Add Address Form -->
+                <div *ngIf="showAddressForm" class="card shadow-sm border-0 rounded-4 mb-4 bg-light">
+                    <div class="card-body p-4">
+                        <h6 class="fw-bold mb-3">Add New Address</h6>
+                        <form (ngSubmit)="saveAddress()">
+                            <div class="row g-3">
+                                <div class="col-md-6">
+                                    <input type="text" class="form-control" placeholder="Label (e.g. Home)"
+                                        [(ngModel)]="newAddress.label" name="label" required>
+                                </div>
+                                <div class="col-md-12">
+                                    <input type="text" class="form-control" placeholder="Street Address"
+                                        [(ngModel)]="newAddress.street" name="street" required>
+                                </div>
+                                <div class="col-md-4">
+                                    <input type="text" class="form-control" placeholder="City"
+                                        [(ngModel)]="newAddress.city" name="city" required>
+                                </div>
+                                <div class="col-md-4">
+                                    <input type="text" class="form-control" placeholder="State"
+                                        [(ngModel)]="newAddress.state" name="state" required>
+                                </div>
+                                <div class="col-md-4">
+                                    <input type="text" class="form-control" placeholder="Zip Code"
+                                        [(ngModel)]="newAddress.zipCode" name="zipCode" required>
+                                </div>
+                                <div class="col-md-12">
+                                    <input type="text" class="form-control" placeholder="Country"
+                                        [(ngModel)]="newAddress.country" name="country" required>
+                                </div>
+                                <div class="col-12 text-end mt-3">
+                                    <button type="button" class="btn btn-link text-muted me-2"
+                                        (click)="toggleAddressForm()">Cancel</button>
+                                    <button type="submit" class="btn btn-primary rounded-pill px-4"
+                                        [disabled]="addressProcessing">Save Address</button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+
+                <!-- Address List -->
+                <div class="row">
+                    <div class="col-md-6 mb-3" *ngFor="let addr of addresses">
+                        <div class="card h-100 shadow-sm border-0 rounded-4 position-relative">
+                            <div class="card-body p-4">
+                                <div class="d-flex justify-content-between align-items-start mb-2">
+                                    <span class="badge bg-light text-dark border">{{addr.label}}</span>
+                                    <button class="btn btn-link text-danger p-0" (click)="deleteAddress(addr.id)">
+                                        <i class="bi bi-trash"></i>
+                                    </button>
+                                </div>
+                                <p class="mb-1 fw-bold">{{user.firstName}} {{user.lastName}}</p>
+                                <p class="mb-0 text-muted small">{{addr.street}}</p>
+                                <p class="mb-0 text-muted small">{{addr.city}}, {{addr.state}} {{addr.zipCode}}</p>
+                                <p class="mb-0 text-muted small">{{addr.country}}</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div *ngIf="addresses.length === 0 && !showAddressForm" class="col-12 text-center py-5 text-muted">
+                        <i class="bi bi-geo-alt display-4 mb-3 d-block opacity-25"></i>
+                        No saved addresses yet.
+                    </div>
+                </div>
+            </div>
+
+            <!-- Tab: Saved Payments -->
+            <div *ngIf="activeTab === 'payments'" class="animate__animated animate__fadeIn">
+                <div class="d-flex justify-content-between align-items-center mb-4">
+                    <h4 class="mb-0 fw-bold">Saved Payment Methods</h4>
+                    <button class="btn btn-primary rounded-pill px-3" (click)="togglePaymentForm()"
+                        *ngIf="!showPaymentForm">
+                        <i class="bi bi-plus-lg me-1"></i> Add New Method
+                    </button>
+                </div>
+
+                <!-- Add Payment Form -->
+                <!-- Add Payment Form -->
+                <div *ngIf="showPaymentForm" class="card shadow-sm border-0 rounded-4 mb-4 bg-light">
+                    <div class="card-body p-4">
+                        <h6 class="fw-bold mb-3">Add Payment Method</h6>
+
+                        <!-- Tabs -->
+                        <ul class="nav nav-pills mb-3 gap-2">
+                            <li class="nav-item">
+                                <button class="nav-link" [class.active]="paymentMethodType === 'CREDIT_CARD'"
+                                    (click)="paymentMethodType = 'CREDIT_CARD'">Card</button>
+                            </li>
+                            <li class="nav-item">
+                                <button class="nav-link" [class.active]="paymentMethodType === 'UPI'"
+                                    (click)="paymentMethodType = 'UPI'">UPI</button>
+                            </li>
+                            <li class="nav-item">
+                                <button class="nav-link" [class.active]="paymentMethodType === 'NET_BANKING'"
+                                    (click)="paymentMethodType = 'NET_BANKING'">Net Banking</button>
+                            </li>
+                        </ul>
+
+                        <div *ngIf="!paymentMethodType" class="text-muted text-center py-4">
+                            <i class="bi bi-arrow-up-circle d-block h3 mb-2"></i>
+                            Please select a payment method type above.
+                        </div>
+
+                        <form *ngIf="paymentMethodType" (ngSubmit)="savePaymentMethod()">
+                            <!-- Card Inputs -->
+                            <div *ngIf="paymentMethodType === 'CREDIT_CARD' || paymentMethodType === 'DEBIT_CARD'"
+                                class="row g-3">
+                                <div class="col-12">
+                                    <input type="text" class="form-control" placeholder="Card Number"
+                                        [(ngModel)]="newPaymentDetails.cardNumber" name="cardNumber">
+                                </div>
+                                <div class="col-md-6">
+                                    <input type="text" class="form-control" placeholder="Card Holder Name"
+                                        [(ngModel)]="newPaymentDetails.cardHolderName" name="holderName">
+                                </div>
+                                <div class="col-md-3">
+                                    <input type="text" class="form-control" placeholder="MM/YY"
+                                        [(ngModel)]="newPaymentDetails.expiryDate" name="expiry">
+                                </div>
+                                <div class="col-md-3">
+                                    <input type="password" class="form-control" placeholder="CVV"
+                                        [(ngModel)]="newPaymentDetails.cvv" name="cvv">
+                                </div>
+                            </div>
+
+                            <!-- UPI Inputs -->
+                            <div *ngIf="paymentMethodType === 'UPI'" class="row g-3">
+                                <div class="col-12">
+                                    <input type="text" class="form-control" placeholder="UPI ID (e.g. user@bank)"
+                                        [(ngModel)]="newPaymentDetails.upiId" name="upiId">
+                                </div>
+                            </div>
+
+                            <!-- Net Banking Placeholder -->
+                            <div *ngIf="paymentMethodType === 'NET_BANKING'" class="alert alert-info border-0 mb-0">
+                                <i class="bi bi-info-circle me-2"></i> Net Banking selection will be available during
+                                checkout.
+                            </div>
+
+
+                            <div class="text-end mt-3">
+                                <button type="button" class="btn btn-link text-muted me-2"
+                                    (click)="closePaymentForm()">Cancel</button>
+                                <button type="submit" class="btn btn-primary rounded-pill px-4"
+                                    [disabled]="paymentProcessing">{{ editingPaymentId ? 'Update Method' : 'Save Method'
+                                    }}</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-6 mb-3" *ngFor="let method of savedPayments">
+                        <div class="card shadow-sm border-0 rounded-4 text-white position-relative"
+                            [ngClass]="method.type === 'UPI' ? 'bg-success' : 'bg-dark'"
+                            [style.background]="method.type !== 'UPI' ? 'linear-gradient(135deg, #1e1e2f 0%, #3e3e5e 100%)' : ''">
+
+                            <div class="position-absolute top-0 end-0 p-3">
+                                <button class="btn btn-sm btn-light rounded-pill me-2"
+                                    (click)="editPaymentMethod(method)">
+                                    <i class="bi bi-pencil-fill"></i> Edit
+                                </button>
+                                <button class="btn btn-sm btn-danger rounded-pill"
+                                    (click)="deletePaymentMethod(method.id)">
+                                    <i class="bi bi-trash-fill"></i> Delete
+                                </button>
+                            </div>
+
+                            <div class="card-body p-4">
+                                <div class="mb-4">
+                                    <i class="bi display-6"
+                                        [ngClass]="method.type === 'UPI' ? 'bi-phone' : 'bi-credit-card'"></i>
+                                </div>
+                                <h5 class="fw-bold mb-1">{{method.provider}}</h5>
+                                <p class="mb-0 opacity-75 font-monospace">{{method.maskedNumber}}</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div *ngIf="savedPayments.length === 0 && !showPaymentForm"
+                        class="col-12 text-center py-5 text-muted">
+                        <i class="bi bi-wallet2 display-4 mb-3 d-block opacity-25"></i>
+                        No saved payment methods.
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

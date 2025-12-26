@@ -1,0 +1,167 @@
+<div class="home-container">
+    <!-- Hero Section -->
+    <section class="hero-section text-center">
+        <div class="container">
+            <h1 class="hero-title animate__animated animate__fadeInDown">Elevate Your Lifestyle</h1>
+            <p class="lead mb-5 opacity-75 animate__animated animate__fadeInUp animate__delay-1s">
+                Discover curated collections of premium electronics, fashion, and home essentials.
+            </p>
+            <div class="animate__animated animate__fadeInUp animate__delay-1s">
+                <button (click)="shopNow()" class="btn btn-primary btn-lg rounded-pill px-5 me-3 fw-bold shadow">
+                    Shop Collection
+                </button>
+                <a href="#new-arrivals" class="btn btn-outline-light btn-lg rounded-pill px-5 fw-bold">
+                    Learn More
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Offers Section -->
+    <section class="offers-section">
+        <div class="container">
+            <h2 class="section-title">Exclusive Offers</h2>
+            <div class="row g-4">
+                <div class="col-md-4">
+                    <div class="coupon-card">
+                        <span class="badge bg-danger mb-2">HOT OFFER</span>
+                        <div class="coupon-amount">₹200 OFF</div>
+                        <p class="text-muted">On orders above ₹1,000</p>
+                        <div class="coupon-code">OFFER1000</div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="coupon-card">
+                        <span class="badge bg-primary mb-2">PREMIUM</span>
+                        <div class="coupon-amount">₹500 OFF</div>
+                        <p class="text-muted">On orders above ₹2,000</p>
+                        <div class="coupon-code">OFFER2000</div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="coupon-card">
+                        <span class="badge bg-success mb-2">MEGA SAVER</span>
+                        <div class="coupon-amount">₹1,200 OFF</div>
+                        <p class="text-muted">On orders above ₹5,000</p>
+                        <div class="coupon-code">MEGA5000</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Popular Categories -->
+    <section class="py-5 bg-white">
+        <div class="container">
+            <h2 class="section-title">Browse Categories</h2>
+            <div class="row g-4">
+                <div class="col-6 col-md-3">
+                    <div class="category-card" (click)="browseCategory('Electronics')">
+                        <div class="category-icon text-primary"><i class="bi bi-laptop"></i></div>
+                        <h5>Electronics</h5>
+                    </div>
+                </div>
+                <div class="col-6 col-md-3">
+                    <div class="category-card" (click)="browseCategory('Fashion')">
+                        <div class="category-icon text-danger"><i class="bi bi-bag-heart"></i></div>
+                        <h5>Fashion</h5>
+                    </div>
+                </div>
+                <div class="col-6 col-md-3">
+                    <div class="category-card" (click)="browseCategory('Home & Kitchen')">
+                        <div class="category-icon text-success"><i class="bi bi-house-door"></i></div>
+                        <h5>Home</h5>
+                    </div>
+                </div>
+                <div class="col-6 col-md-3">
+                    <div class="category-card" (click)="browseCategory('Fitness')">
+                        <div class="category-icon text-warning"><i class="bi bi-lightning-charge"></i></div>
+                        <h5>Fitness</h5>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- New Arrivals Section -->
+    <section id="new-arrivals" class="py-5">
+        <div class="container">
+            <div class="d-flex justify-content-between align-items-end mb-4">
+                <h2 class="section-title m-0">New Arrivals</h2>
+                <a (click)="shopNow()" class="btn btn-link text-decoration-none">View All <i
+                        class="bi bi-arrow-right"></i></a>
+            </div>
+
+            <div *ngIf="loading" class="text-center py-5">
+                <div class="spinner-border text-primary" role="status"></div>
+            </div>
+
+            <div class="row g-4" *ngIf="!loading">
+                <div class="col-md-3" *ngFor="let product of newArrivals">
+                    <div class="card product-card h-100 shadow-sm border-0">
+                        <div class="img-wrapper" [routerLink]="['/products', product.id]">
+                            <img [src]="product.mainImageUrl" class="product-img" [alt]="product.name">
+                            <span class="position-absolute top-0 start-0 m-2 badge bg-dark opacity-75">NEW</span>
+                        </div>
+                        <div class="card-body">
+                            <h6 class="fw-bold text-truncate">{{ product.name }}</h6>
+                            <div class="rating-stars small mb-2 text-warning d-flex align-items-center gap-1">
+                                <div class="stars">
+                                    <i class="bi" [ngClass]="product.rating >= 1 ? 'bi-star-fill' : 'bi-star'"></i>
+                                    <i class="bi" [ngClass]="product.rating >= 2 ? 'bi-star-fill' : 'bi-star'"></i>
+                                    <i class="bi" [ngClass]="product.rating >= 3 ? 'bi-star-fill' : 'bi-star'"></i>
+                                    <i class="bi" [ngClass]="product.rating >= 4 ? 'bi-star-fill' : 'bi-star'"></i>
+                                    <i class="bi" [ngClass]="product.rating >= 5 ? 'bi-star-fill' : 'bi-star'"></i>
+                                </div>
+                                <span class="text-dark fw-bold">{{ product.rating | number:'1.1-1' }}</span>
+                            </div>
+                            <div class="d-flex justify-content-between align-items-center">
+                                <span class="fw-bold">{{ product.price | currency:'INR':'symbol' }}</span>
+                                <button class="btn btn-outline-primary btn-sm rounded-pill px-3"
+                                    (click)="shopNow()">Shop</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Popular Products Section -->
+    <section class="py-5 bg-white">
+        <div class="container">
+            <div class="d-flex justify-content-between align-items-end mb-4">
+                <h2 class="section-title m-0">Popular Right Now</h2>
+                <a (click)="shopNow()" class="btn btn-link text-decoration-none">Explore More <i
+                        class="bi bi-arrow-right"></i></a>
+            </div>
+
+            <div class="row g-4" *ngIf="!loading">
+                <div class="col-md-3" *ngFor="let product of popularProducts">
+                    <div class="card product-card h-100 shadow-sm border-0">
+                        <div class="img-wrapper" [routerLink]="['/products', product.id]">
+                            <img [src]="product.mainImageUrl" class="product-img" [alt]="product.name">
+                            <span class="position-absolute top-0 start-0 m-2 badge bg-warning text-dark">POPULAR</span>
+                        </div>
+                        <div class="card-body">
+                            <h6 class="fw-bold text-truncate">{{ product.name }}</h6>
+                            <div class="rating-stars small">
+                                <i class="bi bi-star-fill"></i>
+                                <i class="bi bi-star-fill"></i>
+                                <i class="bi bi-star-fill"></i>
+                                <i class="bi bi-star-fill"></i>
+                                <i class="bi bi-star-half"></i>
+                                <span class="text-muted ms-1">(4.5)</span>
+                            </div>
+                            <div class="d-flex justify-content-between align-items-center">
+                                <span class="fw-bold text-primary">{{ product.price | currency:'INR':'symbol' }}</span>
+                                <button class="btn btn-primary btn-sm rounded-pill px-3"
+                                    (click)="shopNow()">Buy</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+</div>

@@ -1,0 +1,89 @@
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark sticky-top">
+  <div class="container">
+    <a class="navbar-brand fw-bold" routerLink="/">
+      <i class="bi bi-shop me-2"></i>ShopOSS
+    </a>
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarNav">
+      <ul class="navbar-nav me-auto">
+        <li class="nav-item">
+          <a class="nav-link" routerLink="/" routerLinkActive="active"
+            [routerLinkActiveOptions]="{exact: true}">Home</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" routerLink="/products" routerLinkActive="active">Products</a>
+        </li>
+        <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">
+            Categories
+          </a>
+          <ul class="dropdown-menu">
+            <li><a class="dropdown-item" routerLink="/products"
+                [queryParams]="{category: 'Electronics'}">Electronics</a></li>
+            <li><a class="dropdown-item" routerLink="/products" [queryParams]="{category: 'Fashion'}">Fashion</a></li>
+            <li><a class="dropdown-item" routerLink="/products" [queryParams]="{category: 'Home & Kitchen'}">Home &
+                Kitchen</a></li>
+            <li><a class="dropdown-item" routerLink="/products" [queryParams]="{category: 'Fitness'}">Fitness</a></li>
+            <li><a class="dropdown-item" routerLink="/products" [queryParams]="{category: 'Beauty'}">Beauty</a></li>
+            <li><a class="dropdown-item" routerLink="/products" [queryParams]="{category: 'Books'}">Books</a></li>
+            <li><a class="dropdown-item" routerLink="/products" [queryParams]="{category: 'Leisure'}">Leisure</a></li>
+          </ul>
+        </li>
+      </ul>
+      <form class="d-flex me-3" (ngSubmit)="onSearch()">
+        <div class="input-group">
+          <span class="input-group-text bg-white border-end-0">
+            <i class="bi bi-search text-muted"></i>
+          </span>
+          <input class="form-control border-start-0" type="search" name="search" [(ngModel)]="searchQuery"
+            placeholder="Search products..." aria-label="Search">
+        </div>
+      </form>
+
+      <ul class="navbar-nav align-items-center">
+        <ng-container *ngIf="authService.isLoggedIn(); else guestTemplate">
+          <li class="nav-item">
+            <a class="nav-link position-relative" routerLink="/cart">
+              <i class="bi bi-cart3 fs-5"></i>
+              <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger"
+                *ngIf="cartItemCount > 0">
+                {{ cartItemCount }}
+              </span>
+            </a>
+          </li>
+          <li class="nav-item dropdown" *ngIf="authService.isAdmin()">
+            <a class="nav-link dropdown-toggle fw-bold text-info" href="#" role="button" data-bs-toggle="dropdown">
+              Admin
+            </a>
+            <ul class="dropdown-menu dropdown-menu-end shadow-sm border-0 rounded-3">
+              <li><a class="dropdown-item py-2" routerLink="/admin/products">Manage Products</a></li>
+              <li><a class="dropdown-item py-2" routerLink="/admin/orders">Manage Orders</a></li>
+              <li><a class="dropdown-item py-2" routerLink="/admin/coupons">Manage Coupons</a></li>
+            </ul>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" routerLink="/profile">Profile</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" routerLink="/orders">Orders</a>
+          </li>
+
+
+          <li class="nav-item ms-lg-3">
+            <button class="btn btn-outline-light btn-sm" (click)="logout()">Logout</button>
+          </li>
+        </ng-container>
+        <ng-template #guestTemplate>
+          <li class="nav-item">
+            <a class="nav-link" routerLink="/login">Login</a>
+          </li>
+          <li class="nav-item ms-lg-2">
+            <a class="btn btn-primary btn-sm px-3" routerLink="/register">Register</a>
+          </li>
+        </ng-template>
+      </ul>
+    </div>
+  </div>
+</nav>

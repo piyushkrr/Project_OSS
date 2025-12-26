@@ -1,0 +1,16 @@
+.table-responsive {
+    border-radius: 12px;
+    overflow: hidden;
+}
+
+.status-badge {
+    padding: 6px 12px;
+    border-radius: 20px;
+    font-size: 0.85rem;
+    font-weight: 500;
+}
+
+.badge-pending { background-color: #fff3cd; color: #856404; }
+.badge-shipped { background-color: #cce5ff; color: #004085; }
+.badge-delivered { background-color: #d4edda; color: #155724; }
+.badge-cancelled { background-color: #f8d7da; color: #721c24; }

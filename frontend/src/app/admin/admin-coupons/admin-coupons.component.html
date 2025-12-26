@@ -1,0 +1,133 @@
+<div class="container mt-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2 class="fw-bold">Manage Coupons</h2>
+        <button class="btn btn-primary" (click)="openAddForm()">
+            <i class="bi bi-plus-circle me-2"></i>Add New Coupon
+        </button>
+    </div>
+
+    <!-- Loading Spinner -->
+    <div *ngIf="loading" class="text-center my-5">
+        <div class="spinner-border text-primary" role="status">
+            <span class="visually-hidden">Loading...</span>
+        </div>
+    </div>
+
+    <!-- Coupons Table -->
+    <div *ngIf="!loading" class="card shadow-sm">
+        <div class="card-body">
+            <div class="table-responsive">
+                <table class="table table-hover">
+                    <thead>
+                        <tr>
+                            <th>Code</th>
+                            <th>Description</th>
+                            <th>Min Order</th>
+                            <th>Discount</th>
+                            <th>Status</th>
+                            <th>Used/Limit</th>
+                            <th>Expiry</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr *ngFor="let coupon of coupons">
+                            <td><strong>{{ coupon.code }}</strong></td>
+                            <td>{{ coupon.description }}</td>
+                            <td>₹{{ coupon.minOrderValue }}</td>
+                            <td class="text-success fw-bold">₹{{ coupon.discountAmount }}</td>
+                            <td>
+                                <span class="badge" [ngClass]="coupon.isActive ? 'bg-success' : 'bg-secondary'">
+                                    {{ coupon.isActive ? 'Active' : 'Inactive' }}
+                                </span>
+                            </td>
+                            <td>{{ coupon.usedCount || 0 }} / {{ coupon.usageLimit || '∞' }}</td>
+                            <td>{{ coupon.expiryDate | date: 'short' || 'No expiry' }}</td>
+                            <td>
+                                <button class="btn btn-sm btn-outline-primary me-2" (click)="openEditForm(coupon)">
+                                    <i class="bi bi-pencil"></i>
+                                </button>
+                                <button class="btn btn-sm btn-outline-danger" (click)="deleteCoupon(coupon)">
+                                    <i class="bi bi-trash"></i>
+                                </button>
+                            </td>
+                        </tr>
+                        <tr *ngIf="coupons.length === 0">
+                            <td colspan="8" class="text-center text-muted">No coupons found</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <!-- Add/Edit Form Modal -->
+    <div *ngIf="showForm" class="modal show d-block" tabindex="-1" style="background-color: rgba(0,0,0,0.5);">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">{{ editingCoupon ? 'Edit' : 'Add' }} Coupon</h5>
+                    <button type="button" class="btn-close" (click)="closeForm()"></button>
+                </div>
+                <div class="modal-body">
+                    <form>
+                        <div class="mb-3">
+                            <label class="form-label">Coupon Code <span class="text-danger">*</span></label>
+                            <input type="text" class="form-control" [(ngModel)]="formData.code" name="code"
+                                [disabled]="!!editingCoupon" required>
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label">Description</label>
+                            <input type="text" class="form-control" [(ngModel)]="formData.description"
+                                name="description">
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">Min Order Value (₹) <span class="text-danger">*</span></label>
+                                <input type="number" class="form-control" [(ngModel)]="formData.minOrderValue"
+                                    name="minOrderValue" required>
+                            </div>
+
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">Discount Amount (₹) <span class="text-danger">*</span></label>
+                                <input type="number" class="form-control" [(ngModel)]="formData.discountAmount"
+                                    name="discountAmount" required>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">Usage Limit</label>
+                                <input type="number" class="form-control" [(ngModel)]="formData.usageLimit"
+                                    name="usageLimit">
+                                <small class="text-muted">Leave empty for unlimited</small>
+                            </div>
+
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">Expiry Date</label>
+                                <input type="datetime-local" class="form-control" [(ngModel)]="formData.expiryDate"
+                                    name="expiryDate">
+                            </div>
+                        </div>
+
+                        <div class="mb-3 form-check">
+                            <input type="checkbox" class="form-check-input" [(ngModel)]="formData.isActive"
+                                name="isActive" id="isActive">
+                            <label class="form-check-label" for="isActive">
+                                Active
+                            </label>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" (click)="closeForm()">Cancel</button>
+                    <button type="button" class="btn btn-primary" (click)="saveCoupon()">
+                        {{ editingCoupon ? 'Update' : 'Create' }}
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
